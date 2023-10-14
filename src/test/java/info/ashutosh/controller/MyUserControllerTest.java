@@ -43,10 +43,9 @@ public class MyUserControllerTest {
 
 		String json = objectMapper.writeValueAsString(user);
 
-		System.out.println(json);
-
-		mockMvc.perform(MockMvcRequestBuilders.post("/users/create").contentType(MediaType.APPLICATION_JSON).content(json))
-//	            .andExpect(MockMvcResultMatchers.status().isCreated())
+		mockMvc.perform(MockMvcRequestBuilders.post("/users/create")
+				.contentType(MediaType.APPLICATION_JSON).content(json))
+	            .andExpect(MockMvcResultMatchers.status().isCreated())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.name").value("John"));
 	}
 
@@ -58,8 +57,9 @@ public class MyUserControllerTest {
 
 		when(userService.getUserById(1L)).thenReturn(Optional.of(user));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/users/1")).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.name").value("John"));
+		mockMvc.perform(MockMvcRequestBuilders.get("/users/1"))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.jsonPath("$.name").value("John"));
 	}
 
 	@Test
@@ -73,11 +73,12 @@ public class MyUserControllerTest {
 
 		when(userService.getAllUsers()).thenReturn(Arrays.asList(user1, user2));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/users")).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("John"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Alice"));
+		mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
+		.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
+		.andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("John"))
+		.andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Alice"));
 	}
 
 	@Test
@@ -89,13 +90,21 @@ public class MyUserControllerTest {
 		// Mock the updateUser method of the userService to return the updated user
 		when(userService.updateUser(any(Long.class), any(MyUser.class))).thenReturn(user);
 
-		mockMvc.perform(MockMvcRequestBuilders.put("/users/1").contentType(MediaType.APPLICATION_JSON)
-				.content("{\"name\":\"Updated John\"}")).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Updated John"));
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		mockMvc.perform(MockMvcRequestBuilders
+				.put("/users/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(user)))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers
+						.jsonPath("$.name")
+						.value("Updated John"));
 	}
 
 	@Test
 	public void testDeleteUser() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.delete("/users/1")).andExpect(MockMvcResultMatchers.status().isOk());
+		mockMvc.perform(MockMvcRequestBuilders.delete("/users/1"))
+		.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }

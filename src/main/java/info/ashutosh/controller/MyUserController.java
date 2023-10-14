@@ -36,13 +36,12 @@ public class MyUserController {
 	}
 
 	@PostMapping("/create")
-	public MyUser create(@RequestBody MyUser user) {
+	public ResponseEntity<?> create(@RequestBody MyUser user) {
 		// The 'user' parameter will be automatically populated with JSON data from the
 		// request body.
 		// You can work with 'user' as a Java object.
 		MyUser createUser = userService.createUser(user);
-		return createUser;
-//		return new ResponseEntity<>(createUser, HttpStatus.CREATED);
+		return new ResponseEntity<>(createUser, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
