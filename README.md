@@ -6,9 +6,10 @@
 - Spring Web MVC
 - JUnit
 - Mockito
-- ModelMapper
+- jackson-databind
 - JakartaBean Validation
 - MySQL JDBC Driver
+
 ## Software Programs
 - Java Development Kit (JDK)
 - Spring Tool Suite Server
